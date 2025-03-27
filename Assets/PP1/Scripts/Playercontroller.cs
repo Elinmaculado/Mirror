@@ -23,6 +23,7 @@ public class Playercontroller : NetworkBehaviour
     {
         Invoke("TurnOffText", 2);
     }
+
     private void Update()
     {
         if (!isLocalPlayer) return;
@@ -37,39 +38,30 @@ public class Playercontroller : NetworkBehaviour
         // Detectar clic para disparar
         if (Input.GetMouseButtonDown(0))
         {
-           
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0;
 
             Vector3 direction = (mousePosition - transform.position).normalized;
-            /*
-            if (mousePosition.x > transform.position.x)
-            {
-                CmdShoot(direction, mousePosition, rightFirePoint);
-            }
-            else
-            {
-                CmdShoot(direction, mousePosition, leftFirePoint);
-            }
-            */
-                // Llamamos al comando en el servidor para disparar
-                CmdShoot(direction, mousePosition);
+
+            // dispara izq o derecha
+            Transform firePoint = mousePosition.x > transform.position.x ? rightFirePoint : leftFirePoint;
+
+            CmdShoot(direction, firePoint.position);
         }
     }
 
     [Command]
-    void CmdShoot(Vector3 direction, Vector3 mousePosition/*, Transform firePoint*/)
+    void CmdShoot(Vector3 direction, Vector3 firePointPosition)
     {
-        if (bulletPrefab == null || rightFirePoint == null) return;
+        if (bulletPrefab == null) return;
 
-        GameObject bullet = Instantiate(bulletPrefab, rightFirePoint.position, Quaternion.identity);
+        GameObject bullet = Instantiate(bulletPrefab, firePointPosition, Quaternion.identity);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.linearVelocity = direction * bulletSpeed;
         }
 
-        // Spawnear la bala en la red
         NetworkServer.Spawn(bullet);
         Destroy(bullet, 3);
     }
@@ -91,11 +83,11 @@ public class Playercontroller : NetworkBehaviour
     {
         if (collision.CompareTag("Bullet"))
         {
-            print("Colision detectada");
+            print("Colisi�n detectada");
             hp -= 1;
             print("HP: " + hp);
-            if (hp <= 0) 
-            { 
+            if (hp <= 0)
+            {
                 Destroy(gameObject);
             }
         }
@@ -112,6 +104,7 @@ public class Playercontroller : NetworkBehaviour
     {
         color = newColor;
     }
+
     private void SetColor(Color oldColor, Color newColor)
     {
         sr.color = newColor;
