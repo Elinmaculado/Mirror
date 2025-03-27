@@ -89,7 +89,7 @@ public class Playercontroller : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Bullet"))
+        if (collision.CompareTag("Bullet"))
         {
             print("Colision detectada");
             hp -= 1;
@@ -107,7 +107,7 @@ public class Playercontroller : NetworkBehaviour
         playerText.SetActive(false);
     }
 
-
+    [Command]
     private void CommandSetColor(Color newColor)
     {
         color = newColor;
@@ -119,6 +119,6 @@ public class Playercontroller : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        CommandSetColor(GameObject.FindFirstObjectByType<PlayerInfo>().color);
+        CommandSetColor(new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f)));
     }
 }
