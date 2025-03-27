@@ -9,9 +9,20 @@ public class Playercontroller : NetworkBehaviour
     public Transform rightFirePoint;
     public Transform leftFirePoint;
     public float bulletSpeed = 1f;
+    public GameObject playerText;
+
+    [SyncVar(hook = nameof(SetColor))]
+    public Color color;
+
+    public SpriteRenderer sr;
 
     [SyncVar]
     public float hp = 10;
+
+    private void Start()
+    {
+        Invoke("TurnOffText", 2);
+    }
     private void Update()
     {
         if (!isLocalPlayer) return;
@@ -88,5 +99,26 @@ public class Playercontroller : NetworkBehaviour
                 Destroy(gameObject);
             }
         }
+    }
+
+    [Command]
+    private void TurnOffText()
+    {
+        playerText.SetActive(false);
+    }
+
+
+    private void CommandSetColor(Color newColor)
+    {
+        color = newColor;
+    }
+    private void SetColor(Color oldColor, Color newColor)
+    {
+        sr.color = newColor;
+    }
+
+    public override void OnStartClient()
+    {
+        CommandSetColor(GameObject.FindFirstObjectByType<PlayerInfo>().color);
     }
 }
