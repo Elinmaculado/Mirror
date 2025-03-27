@@ -82,6 +82,11 @@ public class Playercontroller : NetworkBehaviour
         {
             print("Colision detectada");
             hp -= 1;
+            print("HP: " + hp);
+            if (hp <= 0) 
+            { 
+                Destroy(gameObject);
+            }
         }
     }
 }
