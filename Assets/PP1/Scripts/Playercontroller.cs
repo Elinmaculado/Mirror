@@ -63,27 +63,14 @@ public class Playercontroller : NetworkBehaviour
         }
 
         NetworkServer.Spawn(bullet);
-        Destroy(bullet, 3);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        if (!isServer) return;
-
-        hp -= damage;
-        Debug.Log("Current HP: " + hp);
-
-        if (hp <= 0)
-        {
-            NetworkServer.Destroy(gameObject);
-        }
+        Destroy(bullet, 1);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bullet"))
         {
-            print("Colisi�n detectada");
+            print("Colisión detectada");
             hp -= 1;
             print("HP: " + hp);
             if (hp <= 0)
