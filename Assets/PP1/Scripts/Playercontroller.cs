@@ -8,8 +8,9 @@ public class Playercontroller : NetworkBehaviour
     public GameObject bulletPrefab;
     public Transform rightFirePoint;
     public Transform leftFirePoint;
-    public float bulletSpeed = 1f;
+    public float bulletSpeed = 2.5f;
     public GameObject playerText;
+    public AudioSource damageAudio;
 
     [SyncVar(hook = nameof(SetColor))]
     public Color color;
@@ -55,6 +56,7 @@ public class Playercontroller : NetworkBehaviour
     {
         if (bulletPrefab == null) return;
 
+        
         GameObject bullet = Instantiate(bulletPrefab, firePointPosition, Quaternion.identity);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
@@ -70,6 +72,7 @@ public class Playercontroller : NetworkBehaviour
     {
         if (collision.CompareTag("Bullet"))
         {
+            damageAudio.Play();
             print("Colisión detectada");
             hp -= 1;
             print("HP: " + hp);
